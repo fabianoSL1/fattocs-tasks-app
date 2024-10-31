@@ -1,13 +1,5 @@
-import { CreateTaskUseCase } from "./CreateTaskUseCase";
-import { DeleteTaskUseCase } from "./DeleteTaskUseCase";
-import { EditTaskUseCase } from "./EditTaskUseCases";
-import { ListTasksUseCase } from "./ListTasksUseCase";
-import { ReOrderTaskUseCase } from "./ReOrderTaskUseCase";
-
-export {
-    CreateTaskUseCase, 
-    DeleteTaskUseCase, 
-    EditTaskUseCase, 
-    ListTasksUseCase, 
-    ReOrderTaskUseCase
-}
+export * from "./CreateTaskUseCase";
+export * from "./DeleteTaskUseCase";
+export * from "./EditTaskUseCases";
+export * from "./ListTasksUseCase";
+export * from "./ReOrderTaskUseCase";

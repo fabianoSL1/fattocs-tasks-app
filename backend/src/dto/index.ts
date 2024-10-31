@@ -1,9 +1,3 @@
-import { CreateTaskRequest,createTaskSchema } from "./CreateTaskRequest";
-import { EditTaskRequest, editTaskSchema } from "./EditTaskRequest";
-
-export {
-    CreateTaskRequest,
-    createTaskSchema,
-    EditTaskRequest,
-    editTaskSchema
-}
+export * from "./CreateTaskRequest";
+export * from "./EditTaskRequest";
+export * from "./ReOrderTaskRequest";

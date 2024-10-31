@@ -6,12 +6,15 @@ import {
     CreateTaskUseCase,
     EditTaskUseCase,
     DeleteTaskUseCase,
+    ReOrderTaskUseCase,
 } from "../../core/useCases";
 import {
     CreateTaskRequest,
     createTaskSchema,
     EditTaskRequest,
     editTaskSchema,
+    ReOrderTaskRequest,
+    reOrderTaskSchema,
 } from "../../dto";
 import { TaskRepository } from "../../core/TaskRepository";
 import { MemoryTaskRepository } from "../repository/MemoryTaskRepository";
@@ -39,15 +42,25 @@ route.patch("/:id", zValidator("json", editTaskSchema), async (ctx) => {
     const request: EditTaskRequest = ctx.req.valid("json");
 
     const editTaskUseCase = new EditTaskUseCase(taskRepository);
-    const task = editTaskUseCase.execute(id, request);
+    const task = await editTaskUseCase.execute(id, request);
 
     return ctx.json(task);
+});
+
+route.patch("/:id/order", zValidator("json", reOrderTaskSchema), async (ctx) => {
+    const { id } = ctx.req.param();
+    const request: ReOrderTaskRequest = ctx.req.valid("json");
+
+    const reOrderTaskUseCase = new ReOrderTaskUseCase(taskRepository);
+    await reOrderTaskUseCase.execute(id, request);
+
+    return ctx.json({});
 });
 
 route.delete("/:id", async (ctx) => {
     const { id } = ctx.req.param();
     const deleteTaskUseCase = new DeleteTaskUseCase(taskRepository);
-    const task = deleteTaskUseCase.execute(id);
+    const task = await deleteTaskUseCase.execute(id);
 
     return ctx.json(task);
 });
