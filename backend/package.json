@@ -8,6 +8,8 @@
     "deploy": "run-s build zip update"
   },
   "devDependencies": {
+    "@biomejs/biome": "^1.9.4",
+    "@hono/node-server": "^1.13.4",
     "esbuild": "^0.21.4",
     "npm-run-all2": "^6.2.0"
   },
