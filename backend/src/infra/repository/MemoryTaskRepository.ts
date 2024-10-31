@@ -2,7 +2,6 @@ import { Task } from "../../core/Task";
 import { TaskRepository } from "../../core/TaskRepository";
 
 export class MemoryTaskRepository implements TaskRepository {
-    
     private tasks: Map<string, Task> = new Map();
 
     async save(task: Task): Promise<Task> {
@@ -24,12 +23,9 @@ export class MemoryTaskRepository implements TaskRepository {
         return Array.from(tasks);
     }
 
-    async listAfterOrder(order: number): Promise<Task[]> {
-        return (await this.list()).filter(item => item.order >= order);
-    }
-
-    async listBeforeOrder(order: number): Promise<Task[]> {
-        return (await this.list()).filter(item => item.order <= order);
+    async listBetweenOrders(start: number, end: number): Promise<Task[]> {
+        const tasks = await this.list();
+        return tasks.filter((item) => item.order >= start && item.order <= end);
     }
 
     async get(id: string): Promise<Task | undefined> {

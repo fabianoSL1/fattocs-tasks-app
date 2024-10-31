@@ -1,3 +1,4 @@
+import { HTTPException } from "hono/http-exception";
 import { ReOrderTaskRequest } from "../../dto/ReOrderTaskRequest";
 import { Task } from "../Task";
 import { TaskRepository } from "../TaskRepository";
@@ -15,7 +16,7 @@ export class ReOrderTaskUseCase {
         request: ReOrderTaskRequest,
     ): Promise<void> {
         const direction = this.getDirection(request);
-        const tasks = await this.tasksToUpdate(direction, request.newOrder);
+        const tasks = await this.tasksToUpdate(direction, request);
 
         this.verifiyTargetTask(tasks, targetTaskId, request.currentOrder);
 
@@ -42,13 +43,10 @@ export class ReOrderTaskUseCase {
     ) {
         const task = tasks.find((item) => item.id === targetTaskId);
 
-        if (!task) {
-            throw new Error("task not found");
+        if (!task || task.order !== currentOrder) {
+            throw new HTTPException(400, { cause: "task has been modified" });
         }
-
-        if (task.order !== currentOrder) {
-            throw new Error("task has been modified");
-        }
+        
     }
 
     private getDirection(request: ReOrderTaskRequest) {
@@ -60,15 +58,18 @@ export class ReOrderTaskUseCase {
         return direction;
     }
 
-    private async tasksToUpdate(direction: Direction, order: number) {
-        let tasks: Task[];
+    private async tasksToUpdate(
+        direction: Direction,
+        request: ReOrderTaskRequest,
+    ) {
+        let start = request.currentOrder;
+        let end = request.newOrder;
 
-        if (direction === Direction.after) {
-            tasks = await this.repository.listBeforeOrder(order);
-        } else {
-            tasks = await this.repository.listAfterOrder(order);
+        if (direction === Direction.before) {
+            start = request.newOrder;
+            end = request.currentOrder;
         }
 
-        return tasks;
+        return await this.repository.listBetweenOrders(start, end);
     }
 }

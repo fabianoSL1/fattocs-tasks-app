@@ -1,3 +1,4 @@
+import { HTTPException } from "hono/http-exception";
 import { EditTaskRequest } from "../../dto/EditTaskRequest";
 import { Task } from "../Task";
 import { TaskRepository } from "../TaskRepository";
@@ -11,7 +12,7 @@ export class EditTaskUseCase {
         const task = await this.repository.get(id);
         
         if (!task) {
-            throw new Error("task not found");
+            throw new HTTPException(404, {cause: "task not found"});
         }
 
         Object.assign(task, request);
@@ -25,7 +26,7 @@ export class EditTaskUseCase {
         const exist = await this.repository.getByName(name);
 
         if (exist) {
-            throw new Error("task with this name alrealdy exist");
+            throw new HTTPException(400, {cause: "task with this name alrealdy exist"});
         }
     }
 }

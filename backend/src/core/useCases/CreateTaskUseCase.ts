@@ -1,3 +1,4 @@
+import { HTTPException } from "hono/http-exception";
 import { CreateTaskRequest } from "../../dto/CreateTaskRequest";
 import { Task } from "../Task";
 import { TaskRepository } from "../TaskRepository";
@@ -24,7 +25,7 @@ export class CreateTaskUseCase {
         const exist = await this.repository.getByName(name);
 
         if (exist) {
-            throw new Error("task with this name alrealdy exist");
+            throw new HTTPException(400, {cause: "task with this name alrealdy exist"});
         }
     }
 }
