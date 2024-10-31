@@ -2,7 +2,7 @@ import { Task } from "../../core/Task";
 import { TaskRepository } from "../../core/TaskRepository";
 
 export class MemoryTaskRepository implements TaskRepository {
-    private tasks: Map<String, Task> = new Map();
+    private tasks: Map<string, Task> = new Map();
 
     async save(task: Task): Promise<Task> {
         task.id = crypto.randomUUID();
@@ -27,15 +27,16 @@ export class MemoryTaskRepository implements TaskRepository {
 
     async getByName(name: string): Promise<Task | undefined> {
         const tasks = await this.list();
-        return tasks.find(task => task.name == name);
+        return tasks.find((task) => task.name === name);
     }
 
     async getLastTask(): Promise<Task | undefined> {
         const tasks = await this.list();
 
-        return tasks.reduce((previous, current) => {
-            return current.order > previous.order ? current : previous
-        })
+        if (tasks.length) {
+            return tasks.reduce((previous, current) => {
+                return current.order > previous.order ? current : previous;
+            });
+        }
     }
-
 }

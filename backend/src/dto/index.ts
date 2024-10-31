@@ -1,7 +1,9 @@
-import { CreateTaskRequest } from "./CreateTaskRequest";
-import { EditTaskRequest } from "./EditTaskRequest";
+import { CreateTaskRequest,createTaskSchema } from "./CreateTaskRequest";
+import { EditTaskRequest, editTaskSchema } from "./EditTaskRequest";
 
 export {
     CreateTaskRequest,
-    EditTaskRequest
+    createTaskSchema,
+    EditTaskRequest,
+    editTaskSchema
 }
