@@ -7,12 +7,12 @@ export class EditTaskUseCase {
     constructor(private readonly repository: TaskRepository) {}
 
     async execute(id: string, request: EditTaskRequest): Promise<Task> {
-        await this.verifyName(request.name);
+        await this.verifyName(id, request.name);
 
         const task = await this.repository.get(id);
-        
+
         if (!task) {
-            throw new HTTPException(404, {cause: "task not found"});
+            throw new HTTPException(404, { cause: "task not found" });
         }
 
         Object.assign(task, request);
@@ -22,11 +22,13 @@ export class EditTaskUseCase {
         return task;
     }
 
-    private async verifyName(name: string): Promise<void> {
+    private async verifyName(id: string, name: string): Promise<void> {
         const exist = await this.repository.getByName(name);
 
-        if (exist) {
-            throw new HTTPException(400, {cause: "task with this name alrealdy exist"});
+        if (exist && exist.id !== id) {
+            throw new HTTPException(400, {
+                cause: "Já existe uma tarefa com este nome.",
+            });
         }
     }
 }

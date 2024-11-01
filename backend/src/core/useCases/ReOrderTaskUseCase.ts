@@ -71,7 +71,7 @@ export class ReOrderTaskUseCase {
         const task = tasks.find((item) => item.id === targetTaskId);
 
         if (!task || task.order !== currentOrder) {
-            throw new HTTPException(400, { cause: "task has been modified" });
+            throw new HTTPException(400, { cause: "A tarefa já foi reordenada." });
         }
     }
 }
