@@ -23,30 +23,20 @@ export class ReOrderTaskUseCase {
         for (const task of tasks) {
             if (task.id === targetTaskId) {
                 task.order = request.newOrder;
-                continue;
-            }
-
-            if (direction === Direction.after) {
-                task.order -= 1;
             } else {
-                task.order += 1;
+                this.changeOrder(direction, task);
             }
 
             await this.repository.save(task);
         }
     }
 
-    private verifiyTargetTask(
-        tasks: Task[],
-        targetTaskId: string,
-        currentOrder: number,
-    ) {
-        const task = tasks.find((item) => item.id === targetTaskId);
-
-        if (!task || task.order !== currentOrder) {
-            throw new HTTPException(400, { cause: "task has been modified" });
+    private changeOrder(direction: Direction, task: Task) {
+        if (direction === Direction.after) {
+            task.order -= 1;
+        } else {
+            task.order += 1;
         }
-        
     }
 
     private getDirection(request: ReOrderTaskRequest) {
@@ -71,5 +61,17 @@ export class ReOrderTaskUseCase {
         }
 
         return await this.repository.listBetweenOrders(start, end);
+    }
+
+    private verifiyTargetTask(
+        tasks: Task[],
+        targetTaskId: string,
+        currentOrder: number,
+    ) {
+        const task = tasks.find((item) => item.id === targetTaskId);
+
+        if (!task || task.order !== currentOrder) {
+            throw new HTTPException(400, { cause: "task has been modified" });
+        }
     }
 }
