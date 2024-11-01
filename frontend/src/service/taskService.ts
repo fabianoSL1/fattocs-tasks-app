@@ -1,7 +1,11 @@
+import { ClientException } from "@/exceptions/ClientException";
+import { ServerException } from "@/exceptions/ServerException";
 import { CreateTaskRequest } from "@/types/createTaskRequest";
 import { EditTaskRequest } from "@/types/editTaskRequest";
 import { ReOrderTaskRequest } from "@/types/reOrderTaskRequest";
 import { Task } from "@/types/Task";
+
+const host = import.meta.env.VITE_HOST;
 
 export async function getTasks(): Promise<Task[]> {
 	return await makeRequest<Task[]>({
@@ -53,11 +57,23 @@ type Params = {
 };
 
 async function makeRequest<T>({ path, method, body }: Params) {
-	const response = await fetch(`${path}`, {
+	const response = await fetch(host + path, {
 		method: method,
 		body: JSON.stringify(body),
+		headers: {
+			"Content-Type": "application/json",
+		},
 	});
 
+	if (response.status >= 500) {
+		throw new ServerException("estamos com problemas.");
+	}
+
 	const json = await response.json();
+
+	if (response.status >= 400) {
+		throw new ClientException(json.message);
+	}
+
 	return json as T;
 }
