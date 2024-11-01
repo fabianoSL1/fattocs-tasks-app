@@ -3,7 +3,6 @@ import { ServerException } from "@/exceptions/ServerException";
 import { toast } from "@/hooks/use-toast";
 
 export function handlerExceptions(err: unknown, title: string) {
-	
 	const params: Record<string, string> = { title };
 	if (err instanceof ClientException) {
 		params.description = err.message;

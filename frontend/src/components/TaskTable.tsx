@@ -8,19 +8,19 @@ import {
     TableRow,
 } from "./ui/table";
 import { parseCurrency } from "@/lib/currencyUtils";
-import { Button } from "./ui/button";
 import { DndContext, DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { getTasks, reOrderTask } from "@/service/taskService";
-import { useToast } from "@/hooks/use-toast";
-import { ClientException } from "@/exceptions/ClientException";
+import { reOrderTask } from "@/service/taskService";
 import { handlerExceptions } from "@/lib/exceptionsUtils";
+import { DialogDeleteTask } from "./DialogDeleteTask";
+import { Grip } from "lucide-react";
+import { DialogEditTask } from "./DialogEditTask";
 
 const MIN_ACCENT = 1000 * 100;
 
-export default function TaskTable({ tasks, setTasks }: {
+export default function TaskTable({ tasks, fetchTasks }: {
     tasks: Task[],
-    setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+    fetchTasks: () => void
 }) {
     function handleDragEnd(event: DragEndEvent) {
         const { active, over } = event;
@@ -35,7 +35,7 @@ export default function TaskTable({ tasks, setTasks }: {
 
         reOrderTask(active.id as string, params)
             .catch(err => handlerExceptions(err, "Falha ao reordernar tarefa"))
-            .finally(() => getTasks().then(tasks => setTasks(tasks)));
+            .finally(() => fetchTasks());
     }
 
     return (
@@ -45,6 +45,7 @@ export default function TaskTable({ tasks, setTasks }: {
                 <Table>
                     <TableHeader>
                         <TableRow>
+                            <TableHead />
                             <TableHead>Tarefa</TableHead>
                             <TableHead>Data limite</TableHead>
                             <TableHead>Custo</TableHead>
@@ -53,7 +54,7 @@ export default function TaskTable({ tasks, setTasks }: {
                     </TableHeader>
                     <TableBody>
                         {tasks.map((task) => (
-                            <TaskRow task={task} key={task.id} />
+                            <TaskRow task={task} key={task.id} fetchTasks={fetchTasks} />
                         ))}
                     </TableBody>
                 </Table>
@@ -62,8 +63,12 @@ export default function TaskTable({ tasks, setTasks }: {
     );
 }
 
-function TaskRow({ task }: { task: Task }) {
-    const { attributes, listeners, setNodeRef, transition, transform } = useSortable({ id: task.id, data: { order: task.order } });
+function TaskRow({ task, fetchTasks }: {
+    task: Task, fetchTasks: () => void
+}) {
+    const { attributes, listeners, setNodeRef, transition, transform } = useSortable({
+        id: task.id, data: { order: task.order },
+    });
 
     const accent = task.cost >= MIN_ACCENT;
 
@@ -75,15 +80,14 @@ function TaskRow({ task }: { task: Task }) {
                 transition: transition || "transform 0.3s ease",
             }}
             ref={setNodeRef}
-            {...attributes}
-            {...listeners}
         >
+            <TableCell {...attributes} {...listeners} className="w-fit" ><Grip /></TableCell>
             <TableCell>{task.name}</TableCell>
             <TableCell>{new Date(task.dateLimit).toLocaleDateString()}</TableCell>
             <TableCell>{parseCurrency(task.cost)}</TableCell>
             <TableCell className="flex gap-2 justify-end">
-                <Button>Editar</Button>
-                <Button>Excluir</Button>
+                <DialogEditTask task={task} fetchTasks={fetchTasks} />
+                <DialogDeleteTask task={task} fetchTasks={fetchTasks} />
             </TableCell>
         </TableRow>
     )
