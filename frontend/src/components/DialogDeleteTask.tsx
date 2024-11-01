@@ -32,13 +32,19 @@ export function DialogDeleteTask({ task, fetchTasks }: {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Deletar a tarefa {task.name}</DialogTitle>
+          <DialogTitle>Deseja apagar a tarefa {task.name}?</DialogTitle>
         </DialogHeader>
 
-        <DialogFooter>
+        <DialogFooter className="flex gap-2 flex-col">
+        <DialogClose asChild>
+            <Button type="button">
+              não
+            </Button>
+          </DialogClose>
+
           <DialogClose asChild>
             <Button type="button" variant="destructive" onClick={handler}>
-              Confirmar
+              Sim
             </Button>
           </DialogClose>
         </DialogFooter>
