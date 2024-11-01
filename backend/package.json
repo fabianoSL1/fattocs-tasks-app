@@ -5,17 +5,20 @@
     "dev": "tsx ./src/local.ts",
     "build": "esbuild --bundle --outfile=./dist/index.js --platform=node --target=node20 ./src/index.ts",
     "zip": "zip -j lambda.zip dist/index.js",
-    "update": "aws lambda update-function-code --zip-file fileb://lambda.zip --function-name hello",
+    "update": "aws lambda update-function-code --zip-file fileb://lambda.zip --function-name fattocs_tasks_api",
     "deploy": "run-s build zip update"
   },
   "devDependencies": {
     "@biomejs/biome": "^1.9.4",
     "@hono/node-server": "^1.13.4",
+    "@types/node": "^22.8.6",
     "esbuild": "^0.21.4",
     "npm-run-all2": "^6.2.0",
     "tsx": "^4.19.2"
   },
   "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.682.0",
+    "@aws-sdk/lib-dynamodb": "^3.682.0",
     "@hono/zod-validator": "^0.4.1",
     "hono": "^4.6.8",
     "zod": "^3.23.8"
