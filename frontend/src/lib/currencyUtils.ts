@@ -1,10 +1,11 @@
-export function parseCurrency(cents: number) {
-	return (cents / 100).toLocaleString("pt-BR", {
+export function parseCurrency(cents: bigint): string {
+	return (cents / BigInt(100)).toLocaleString("pt-BR", {
 		minimumFractionDigits: 2,
 		maximumFractionDigits: 2,
 	});
 }
 
 export function parseToCents(value: string) {
-	return Math.round(Number.parseFloat(value.replace(",", ".")) * 100);
+	const parsed = Number.parseFloat(value.replace(",", "."));
+	return BigInt(Math.round(parsed * 100));
 }

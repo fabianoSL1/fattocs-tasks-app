@@ -46,6 +46,7 @@ export default function TaskTable({ tasks, fetchTasks }: {
                     <TableHeader>
                         <TableRow>
                             <TableHead />
+                            <TableHead>ID</TableHead>
                             <TableHead>Tarefa</TableHead>
                             <TableHead>Data limite</TableHead>
                             <TableHead>Custo</TableHead>
@@ -82,9 +83,10 @@ function TaskRow({ task, fetchTasks }: {
             ref={setNodeRef}
         >
             <TableCell {...attributes} {...listeners} className="w-fit" ><Grip /></TableCell>
+            <TableCell>{task.id}</TableCell>
             <TableCell>{task.name}</TableCell>
             <TableCell>{new Date(task.dateLimit).toLocaleDateString()}</TableCell>
-            <TableCell>{parseCurrency(task.cost)}</TableCell>
+            <TableCell>{parseCurrency(BigInt(task.cost))}</TableCell>
             <TableCell className="flex gap-2 justify-end">
                 <DialogEditTask task={task} fetchTasks={fetchTasks} />
                 <DialogDeleteTask task={task} fetchTasks={fetchTasks} />

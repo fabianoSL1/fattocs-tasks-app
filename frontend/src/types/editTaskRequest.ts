@@ -1,5 +1,5 @@
 export type EditTaskRequest = {
     name: string;
-    cost: number;
+    cost: string;
     dateLimit: Date;
 }

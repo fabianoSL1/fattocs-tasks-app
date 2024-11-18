@@ -18,7 +18,7 @@ export function DialogCreateTask({ fetchTasks }: {
 }) {
   const [name, setName] = useState("");
   const [dateLimit, setDateLimit] = useState(new Date());
-  const [cost, setCost] = useState(0);
+  const [cost, setCost] = useState(BigInt(0));
 
   const [currencyValue, setCurrencyValue] = useState(parseCurrency(cost));
 
@@ -26,7 +26,7 @@ export function DialogCreateTask({ fetchTasks }: {
   function handler() {
     const editRequest: CreateTaskRequest = {
       name,
-      cost,
+      cost: cost.toString(),
       dateLimit
     }
 

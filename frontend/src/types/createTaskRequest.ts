@@ -1,5 +1,5 @@
 export type CreateTaskRequest = {
     name: string;
-    cost: number;
+    cost: string;
     dateLimit: Date;
 }
