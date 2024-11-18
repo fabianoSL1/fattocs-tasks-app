@@ -1,11 +1,23 @@
 export function parseCurrency(cents: bigint): string {
-	return (cents / BigInt(100)).toLocaleString("pt-BR", {
-		minimumFractionDigits: 2,
-		maximumFractionDigits: 2,
-	});
+	const formattedAmount = (cents / BigInt(100))
+		.toString()
+		.replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+
+	const formattedCents = (cents % BigInt(100)).toString().padStart(2, "0");
+
+	return `${formattedAmount},${formattedCents}`;
 }
 
 export function parseToCents(value: string) {
-	const parsed = Number.parseFloat(value.replace(",", "."));
-	return BigInt(Math.round(parsed * 100));
+	const [_amount, cents] = value.split(",");
+
+	let amount = BigInt(_amount.replace(/\./g, ""));
+
+	amount *= BigInt(100);
+
+	if (cents) {
+		amount += BigInt(cents);
+	}
+
+	return amount;
 }

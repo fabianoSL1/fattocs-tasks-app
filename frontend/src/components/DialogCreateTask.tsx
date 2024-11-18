@@ -59,12 +59,12 @@ export function DialogCreateTask({ fetchTasks }: {
             value={currencyValue}
             onChange={event => {
               setCurrencyValue(event.target.value);
-
             }}
             onBlur={() => {
               const cents = parseToCents(currencyValue);
 
               setCost(cents);
+              console.log(cents);
               setCurrencyValue(parseCurrency(cents));
             }}
           />
