@@ -2,7 +2,7 @@ import z from "zod"
 
 export const createTaskSchema = z.object({
     name: z.string(),
-    cost: z.number(),
+    cost: z.string(),
     dateLimit: z.coerce.date()
 }).strict();
 

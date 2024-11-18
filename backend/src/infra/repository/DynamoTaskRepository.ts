@@ -7,6 +7,7 @@ import {
     GetCommand,
     ScanCommand,
     ScanCommandInput,
+    NumberValue,
 } from "@aws-sdk/lib-dynamodb";
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 
@@ -39,7 +40,11 @@ export class DynamoTaskRepository implements TaskRepository {
 
         const command = new PutCommand({
             TableName: this.table,
-            Item: { ...task, dateLimit: task.dateLimit.toISOString() },
+            Item: {
+                ...task,
+                dateLimit: task.dateLimit.toISOString(),
+                cost: new NumberValue(task.cost),
+            },
         });
 
         await this.client.send(command);
@@ -153,7 +158,7 @@ export class DynamoTaskRepository implements TaskRepository {
         const task: Task = {
             id: item.id,
             name: item.name,
-            cost: item.cost,
+            cost: (item.cost as NumberValue).toString(),
             order: item.order,
             dateLimit: new Date(item.dateLimit),
         };

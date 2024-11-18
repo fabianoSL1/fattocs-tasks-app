@@ -7,7 +7,9 @@ export class EditTaskUseCase {
     constructor(private readonly repository: TaskRepository) {}
 
     async execute(id: string, request: EditTaskRequest): Promise<Task> {
-        await this.verifyName(id, request.name);
+        
+
+        await this.verifyName(id, request);
 
         const task = await this.repository.get(id);
 
@@ -22,8 +24,12 @@ export class EditTaskUseCase {
         return task;
     }
 
-    private async verifyName(id: string, name: string): Promise<void> {
-        const exist = await this.repository.getByName(name);
+    private async verifyName(id: string, task: EditTaskRequest): Promise<void> {
+        if (BigInt(task.cost) < 0) {
+            throw new HTTPException(400, {cause: "O custo não pode ser negativo"});
+        }
+
+        const exist = await this.repository.getByName(task.name);
 
         if (exist && exist.id !== id) {
             throw new HTTPException(400, {

@@ -1,7 +1,7 @@
 export type Task = {
     id?: string;
     name: string;
-    cost: number;
+    cost: string;
     dateLimit: Date;
     order: number;
 }
