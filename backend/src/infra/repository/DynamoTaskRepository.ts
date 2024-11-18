@@ -43,7 +43,6 @@ export class DynamoTaskRepository implements TaskRepository {
             Item: {
                 ...task,
                 dateLimit: task.dateLimit.toISOString(),
-                cost: new NumberValue(task.cost),
             },
         });
 
@@ -158,7 +157,7 @@ export class DynamoTaskRepository implements TaskRepository {
         const task: Task = {
             id: item.id,
             name: item.name,
-            cost: (item.cost as NumberValue).toString(),
+            cost: item.cost,
             order: item.order,
             dateLimit: new Date(item.dateLimit),
         };
